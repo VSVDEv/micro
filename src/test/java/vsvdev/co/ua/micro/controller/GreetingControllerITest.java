@@ -1,5 +1,6 @@
 package vsvdev.co.ua.micro.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,6 +26,8 @@ public class GreetingControllerITest {
     @Autowired
     private MockMvc mvc;
 
+    ObjectMapper mapper = new ObjectMapper();
+
 
     @Test
     @Order(1)
@@ -30,7 +35,9 @@ public class GreetingControllerITest {
 
         // given
         String expected_content = "Hello, sv!";
-        long expected_id = 1L;
+        String res = mvc.perform(get("/greeting")).andReturn().getResponse().getContentAsString();
+        Map<String, Integer> map = mapper.readValue(res, Map.class);
+        long expected_id = map.get("id") + 1L;
 
         // when
         mvc.perform(get("/greeting?name=sv"))
@@ -47,7 +54,9 @@ public class GreetingControllerITest {
     public void shouild_return_default() throws Exception {
 
         // given
-        long second_id = 2L;
+        String res = mvc.perform(get("/greeting")).andReturn().getResponse().getContentAsString();
+        Map<String, Integer> map = mapper.readValue(res, Map.class);
+        long expected_id = map.get("id") + 1L;
         String expected_content = "Hello, World!";
 
         // when
@@ -55,7 +64,7 @@ public class GreetingControllerITest {
 
                 // then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(second_id))
+                .andExpect(jsonPath("$.id").value(expected_id))
                 .andExpect(jsonPath("$.content").value(expected_content));
     }
 }
