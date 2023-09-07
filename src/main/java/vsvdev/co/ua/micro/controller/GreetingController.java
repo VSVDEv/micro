@@ -21,9 +21,19 @@ public class GreetingController {
 
     @GetMapping("/greeting")
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+        try {
+            if (name.equals("admin")) {
+                throw new IllegalArgumentException("this value is prohibited");
+            }
+        } catch (IllegalArgumentException ex) {
+
+            log.error("Exception {}", ex.getMessage());
+             throw new RuntimeException();
+        }
+
         log.info("!!!!! Request with name {}", name);
         Greeting greet = service.greet(name);
-        log.info("!!!!! Response with content {} and id {}", greet.content,greet.id);
+        log.info("!!!!! Response with content {} and id {}", greet.content, greet.id);
         return greet;
     }
 }
