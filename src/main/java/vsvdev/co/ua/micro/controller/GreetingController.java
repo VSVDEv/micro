@@ -10,30 +10,32 @@ import vsvdev.co.ua.micro.service.GreetingService;
 
 @RestController
 public class GreetingController {
+  private final GreetingService service;
 
-    private final GreetingService service;
+  private static final Logger log = LoggerFactory.getLogger(GreetingController.class);
 
-    Logger log = LoggerFactory.getLogger(GreetingController.class);
 
-    public GreetingController(GreetingService service) {
-        this.service = service;
+  public GreetingController(GreetingService service) {
+    this.service = service;
+  }
+
+  @GetMapping("/greeting")
+  public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+
+    try {
+      if ("admin".equals(name)) {
+        throw new IllegalArgumentException("this value is prohibited");
+      }
+    } catch (IllegalArgumentException ex) {
+      if (log.isErrorEnabled()) {
+        log.error("Exception:" + ex.getMessage());
+      }
     }
 
-    @GetMapping("/greeting")
-    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        try {
-            if (name.equals("admin")) {
-                throw new IllegalArgumentException("this value is prohibited");
-            }
-        } catch (IllegalArgumentException ex) {
-
-            log.error("Exception {}", ex.getMessage());
-             throw new RuntimeException();
-        }
-
-        log.info("!!!!! Request with name {}", name);
-        Greeting greet = service.greet(name);
-        log.info("!!!!! Response with content {} and id {}", greet.content, greet.id);
-        return greet;
-    }
+    log.info("!!!!! Request with name " + name);
+    log.info(log.isInfoEnabled() ? "!!!!! Request with name " + name : null);
+    Greeting greet = service.greet(name);
+    log.info("!!!!! Response with content " +  greet.getContent() + "and id " + greet.getId());
+    return greet;
+  }
 }

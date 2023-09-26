@@ -4,5 +4,5 @@ import vsvdev.co.ua.micro.entities.Greeting;
 
 public interface GreetingService {
 
-    Greeting greet(String name);
+  Greeting greet(String name);
 }

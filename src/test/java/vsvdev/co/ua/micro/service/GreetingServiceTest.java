@@ -9,36 +9,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GreetingServiceTest {
 
-    private GreetingService service = new GreetingServiceImpl();
+  private GreetingService service = new GreetingServiceImpl();
 
 
-    @Test
-    public void shouild_return_name() throws Exception {
+  @Test
+  public void shouildReturnName() throws Exception {
 
-        // given
-        String expected_content = "Hello, sv!";
-        long expected_id = service.greet("").id + 1L;
+    // given
+    String expectedContent = "Hello, sv!";
+    long expectedId = service.greet("").getId() + 1L;
 
-        // when
-        Greeting greeting = service.greet("sv");
+    // when
+    Greeting greeting = service.greet("sv");
 
-        // then
-        assertEquals(expected_id, greeting.id);
-        assertEquals(expected_content, greeting.content);
-    }
+    // then
+    assertEquals(expectedId, greeting.getId());
+    assertEquals(expectedContent, greeting.getContent());
+  }
 
-    @Test
-    public void shouild_return_count() throws Exception {
+  @Test
+  public void shouildReturnCount() throws Exception {
 
-        // given
-        long second_id = service.greet("").id + 1L;
-        String expected_content = "Hello, World!";
+    // given
+    long expectedId = service.greet("").getId() + 1L;
+    String expectedContent = "Hello, World!";
 
-        // when
-        Greeting greeting = service.greet("");
+    // when
+    Greeting greeting = service.greet("");
 
-        // then
-        assertEquals(second_id, greeting.id);
-    }
+    // then
+    assertEquals(expectedId, greeting.getId());
+  }
 
 }
